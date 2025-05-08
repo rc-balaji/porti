@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "wouter";
-import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ThemeToggle } from "./ThemeToggle";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -123,11 +122,11 @@ const Navbar = () => {
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? "py-2 bg-white/80 dark:bg-[hsl(var(--dark-bg))] dark:bg-opacity-80 backdrop-blur-md shadow-md"
+          ? "py-2 bg-white/80 dark:bg-[hsl(var(--dark-bg))/0.8] backdrop-blur-md shadow-md"
           : "py-4 bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="container">
         <nav className="flex items-center justify-between">
           <motion.div
             initial="hidden"
@@ -158,7 +157,7 @@ const Navbar = () => {
                 className={`relative px-2 py-1 transition-colors duration-300 ${
                   activeSection === link.href
                     ? "text-primary font-medium"
-                    : "hover:text-primary"
+                    : "text-foreground/80 hover:text-primary dark:text-foreground/80 dark:hover:text-primary"
                 }`}
               >
                 {link.label}
@@ -186,7 +185,7 @@ const Navbar = () => {
               href="/assets/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:block px-4 py-2 bg-gradient-to-r from-[hsl(var(--gradient-start))] to-[hsl(var(--gradient-end))] text-white rounded-md transition-all"
+              className="hidden md:block px-4 py-2 bg-gradient-to-r from-[hsl(var(--gradient-start))] via-[hsl(var(--gradient-mid))] to-[hsl(var(--gradient-end))] text-white rounded-md transition-all hover:opacity-90"
             >
               Resume
             </motion.a>
@@ -197,7 +196,7 @@ const Navbar = () => {
               transition={{ delay: 0.7 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-[hsl(var(--dark-card))/0.8] transition-colors"
+              className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               aria-label="Toggle mobile menu"
             >
               <motion.div
@@ -210,7 +209,7 @@ const Navbar = () => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-6 w-6 text-foreground"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -234,43 +233,45 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        <motion.div
-          initial="closed"
-          animate={isMobileMenuOpen ? "open" : "closed"}
-          exit="closed"
-          variants={mobileMenuVariants}
-          className="md:hidden overflow-hidden"
-        >
-          <div className="flex flex-col space-y-4 px-4 py-6 bg-white dark:bg-[hsl(var(--dark-card))] shadow-lg">
-            {navLinks.map((link) => (
+        {isMobileMenuOpen && (
+          <motion.div
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={mobileMenuVariants}
+            className="md:hidden overflow-hidden"
+          >
+            <div className="flex flex-col space-y-4 px-4 py-6 bg-card shadow-lg">
+              {navLinks.map((link) => (
+                <motion.a
+                  key={link.href}
+                  variants={mobileNavItemVariants}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection(link.href);
+                  }}
+                  className={`px-4 py-2 rounded-md transition-colors ${
+                    activeSection === link.href
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "text-foreground/80 hover:bg-accent"
+                  }`}
+                >
+                  {link.label}
+                </motion.a>
+              ))}
               <motion.a
-                key={link.href}
                 variants={mobileNavItemVariants}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(link.href);
-                }}
-                className={`px-4 py-2 rounded-md transition-colors ${
-                  activeSection === link.href
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
+                href="/assets/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-gradient-to-r from-[hsl(var(--gradient-start))] via-[hsl(var(--gradient-mid))] to-[hsl(var(--gradient-end))] text-white rounded-md transition-all text-center hover:opacity-90"
               >
-                {link.label}
+                Resume
               </motion.a>
-            ))}
-            <motion.a
-              variants={mobileNavItemVariants}
-              href="/assets/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-gradient-to-r from-[hsl(var(--gradient-start))] to-[hsl(var(--gradient-end))] text-white rounded-md transition-all text-center"
-            >
-              Resume
-            </motion.a>
-          </div>
-        </motion.div>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </header>
   );

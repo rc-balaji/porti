@@ -137,7 +137,7 @@ const Navbar = () => {
               href="/"
               className="font-poppins text-xl font-bold gradient-text"
             >
-              Balaji C
+              ME
             </a>
           </motion.div>
 

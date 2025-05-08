@@ -13,7 +13,7 @@ const portfolioData = {
     },
     resume: "/assets/resume.pdf",
     availability: "Open to new opportunities",
-    location: "Chennai, India",
+    location: "Coimbatore, India",
     languages: ["English", "Tamil", "Hindi"],
   },
 
